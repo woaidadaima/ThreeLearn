@@ -43,27 +43,36 @@ rgbeLoader.load("/texture/Alex_Hart-Nature_Lab_Bones_2k.hdr", (texture) => {
   scene.environment = texture;
 });
 
-//加载光泽贴图
-// const sheenTexture = new THREE.TextureLoader().load(
-//   "/texture/brick/brick_diffuse.jpg"
-// );
-
-//加载光泽贴图
-const sheenTexture = new THREE.TextureLoader().load(
-  "/texture/brick/brick_roughness.jpg"
+//加载清漆贴图
+const clearcoatRoughnessTexture = new THREE.TextureLoader().load(
+  "/texture/diamond/diamond_emissive.png"
 );
 
-//创建球体
-const geometry = new THREE.SphereGeometry(1, 32, 32);
+//加载法线贴图
+const normalTexture = new THREE.TextureLoader().load(
+  "/texture/carbon/Carbon_Normal.png"
+);
+
+//加载清漆法线贴图
+const clearcoatNormalTexture = new THREE.TextureLoader().load(
+  "/texture/carbon/Scratched_gold_01_1K_Normal.png"
+);
+//创建立方体
+const geometry = new THREE.BoxGeometry(1, 1, 1);
 const planeMaterial = new THREE.MeshPhysicalMaterial({
-  color: new THREE.Color(0x222288),
-  sheen: 1,
-  sheenColor: new THREE.Color(0xffffff),
-  sheenColorMap: sheenTexture,
-  sheenRoughness: 1,
+  color: new THREE.Color(0xffff00),
+  clearcoat: 1,
+  transparent: true,
+  roughness: 0.5,
+  // clearcoatRoughnessMap: clearcoatRoughnessTexture,
+  // clearcoatRoughness: 0.2,
+  normalMap: normalTexture,
+  clearcoatNormalMap: clearcoatNormalTexture,
+  clearcoatNormalScale: new THREE.Vector2(1, 1),
 });
-const sphere = new THREE.Mesh(geometry, planeMaterial);
-scene.add(sphere);
+
+const cube = new THREE.Mesh(geometry, planeMaterial);
+scene.add(cube);
 
 const animate = () => {
   window.requestAnimationFrame(animate);

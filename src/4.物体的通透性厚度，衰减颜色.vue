@@ -43,27 +43,36 @@ rgbeLoader.load("/texture/Alex_Hart-Nature_Lab_Bones_2k.hdr", (texture) => {
   scene.environment = texture;
 });
 
-//加载光泽贴图
-// const sheenTexture = new THREE.TextureLoader().load(
-//   "/texture/brick/brick_diffuse.jpg"
-// );
-
-//加载光泽贴图
-const sheenTexture = new THREE.TextureLoader().load(
-  "/texture/brick/brick_roughness.jpg"
+//加载厚度贴图
+const thicknessTexture = new THREE.TextureLoader().load(
+  "/texture/diamond/diamond_emissive.png"
 );
-
-//创建球体
-const geometry = new THREE.SphereGeometry(1, 32, 32);
+//创建立方体
+const geometry = new THREE.BoxGeometry(1, 1, 1);
 const planeMaterial = new THREE.MeshPhysicalMaterial({
-  color: new THREE.Color(0x222288),
-  sheen: 1,
-  sheenColor: new THREE.Color(0xffffff),
-  sheenColorMap: sheenTexture,
-  sheenRoughness: 1,
+  // color: new THREE.Color(0xffffff),
+  transparent: true,
+  transmission: 0.99,
+  attenuationColor: new THREE.Color(0.8, 0, 0),
+  attenuationDistance: 1,
+  roughness: 0.05,
+  thickness: 2,
+  thicknessMap: thicknessTexture,
 });
-const sphere = new THREE.Mesh(geometry, planeMaterial);
-scene.add(sphere);
+
+//设置材质厚度gui
+gui.add(planeMaterial, "thickness").min(0).max(10).step(0.01).name("thickness");
+
+//设置材质衰减距离gui
+gui
+  .add(planeMaterial, "attenuationDistance")
+  .min(0)
+  .max(10)
+  .step(0.01)
+  .name("attenuationDistance");
+
+const cube = new THREE.Mesh(geometry, planeMaterial);
+scene.add(cube);
 
 const animate = () => {
   window.requestAnimationFrame(animate);
